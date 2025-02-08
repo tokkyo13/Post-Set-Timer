@@ -5,25 +5,27 @@
   <title>Post-Set-Timer</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Elegant background */
     body {
       margin: 0;
       padding: 0;
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, #1C1C2E, #2F3A4A);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      color: #fff;
+      color: #E3E3E3;
       transition: background 0.5s ease-in-out;
     }
+    /* Stylish container */
     .container {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       text-align: center;
       max-width: 400px;
       width: 90%;
@@ -31,36 +33,43 @@
     }
     h1 {
       margin-bottom: 1.5rem;
-      font-size: 2.5rem;
+      font-size: 2rem;
+      font-weight: 700;
     }
+    /* Timer display */
     #display {
       font-size: 3rem;
       margin: 1.5rem 0;
       padding: 0.5rem;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
+    /* Brighter buttons */
     button {
-      background: #fff;
+      background: #5A5A6E; /* Slightly brighter gray */
       border: none;
       border-radius: 5px;
-      color: #333;
+      color: #FFF;
       padding: 0.75rem 1.5rem;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
       margin: 0.5rem;
     }
     button:hover {
-      background: #f1f1f1;
+      background: #6A6A7E;
       transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
     }
+    /* Styled input */
     input[type="number"] {
       padding: 0.5rem;
       font-size: 1rem;
       border-radius: 5px;
-      border: none;
+      border: 1px solid #666;
+      background: rgba(255, 255, 255, 0.1);
+      color: #E3E3E3;
       width: 80px;
       margin-right: 0.5rem;
     }
@@ -68,13 +77,21 @@
       margin-top: 1rem;
       visibility: hidden;
     }
-    /* Time's Up! Styling */
+    /* Fix message height to prevent shifting */
+    #message {
+      font-size: 1.8rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    /* Time's Up! - Strong Red Alert */
     .time-up-bg {
-      background: #d32f2f !important; /* Red background */
+      background: #D32F2F !important; /* Bright red background */
     }
     .time-up-message {
-      color: #ffeb3b !important; /* Yellow text */
-      font-size: 2rem;
+      color: #FFD700 !important; /* Gold text */
     }
   </style>
 </head>
@@ -86,7 +103,7 @@
       <div id="timeInputContainer">
         <label for="timerDuration">Duration (sec): </label>
         <input type="number" id="timerDuration" min="1" value="60">
-        <button id="setButton">Set Time Limit,</button>
+        <button id="setButton">Set Duration</button>
       </div>
       <button id="resetButton" disabled>Reset Timer</button>
     </div>
@@ -149,7 +166,7 @@
       startButton.disabled = true;
       resetButton.disabled = false;
       timeInputContainer.style.visibility = "visible";
-      message.textContent = "";
+      message.textContent = ""; // Clear message but keep space occupied
       countdownInterval = setInterval(updateDisplay, 250);
     });
 
