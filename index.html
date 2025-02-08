@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Post-Set-Timer</title>
-  <!-- Include a modern Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Use a full-page gradient background */
     body {
       margin: 0;
       padding: 0;
@@ -18,7 +16,6 @@
       height: 100vh;
       color: #fff;
     }
-    /* Container with a semi-transparent glass effect */
     .container {
       background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
@@ -29,12 +26,12 @@
       text-align: center;
       max-width: 400px;
       width: 90%;
+      min-height: 350px; /* Prevents height shifting */
     }
     h1 {
       margin-bottom: 1.5rem;
       font-size: 2.5rem;
     }
-    /* Stylish display area */
     #display {
       font-size: 3rem;
       margin: 1.5rem 0;
@@ -43,7 +40,6 @@
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
-    /* Button styles with hover and transition effects */
     button {
       background: #fff;
       border: none;
@@ -59,7 +55,6 @@
       background: #f1f1f1;
       transform: scale(1.05);
     }
-    /* Input styling for the duration field */
     input[type="number"] {
       padding: 0.5rem;
       font-size: 1rem;
@@ -68,8 +63,10 @@
       width: 80px;
       margin-right: 0.5rem;
     }
+    /* Ensure the time input container is always present but invisible initially */
     #timeInputContainer {
       margin-top: 1rem;
+      visibility: hidden; /* Keep space occupied, but hide content */
     }
     #message {
       font-size: 1.2rem;
@@ -81,38 +78,25 @@
   <div class="container">
     <h1>Post-Set-Timer</h1>
     <div id="controls">
-      <!-- Start Timer Button -->
       <button id="startButton">Start Timer</button>
-      
-      <!-- Duration input container (hidden until timer starts) -->
-      <div id="timeInputContainer" style="display: none;">
+      <div id="timeInputContainer">
         <label for="timerDuration">Duration (sec): </label>
         <input type="number" id="timerDuration" min="1" value="60">
         <button id="setButton">Set Timer</button>
       </div>
-      
-      <!-- Reset Timer Button (disabled by default) -->
       <button id="resetButton" disabled>Reset Timer</button>
     </div>
-    
-    <!-- Timer display area -->
     <div id="display">Elapsed Time: 00:00</div>
-    
-    <!-- Message area -->
     <div id="message"></div>
-    
-    <!-- Alarm sound file (make sure alarm.mp3 is in your repository) -->
     <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
   </div>
   
   <script>
-    // Variables to track timing and interval/timeout references
     let startTime = null;
     let targetTime = null;
     let countdownInterval = null;
     let alarmTimeout = null;
 
-    // Get DOM elements
     const startButton = document.getElementById('startButton');
     const setButton = document.getElementById('setButton');
     const resetButton = document.getElementById('resetButton');
@@ -122,14 +106,12 @@
     const message = document.getElementById('message');
     const alarmSound = document.getElementById('alarmSound');
 
-    // Helper function to format seconds as MM:SS
     function formatTime(seconds) {
       const m = Math.floor(seconds / 60).toString().padStart(2, '0');
       const s = Math.floor(seconds % 60).toString().padStart(2, '0');
       return `${m}:${s}`;
     }
 
-    // Update the timer display
     function updateDisplay() {
       if (!targetTime) {
         const elapsed = (Date.now() - startTime) / 1000;
@@ -141,7 +123,6 @@
       }
     }
 
-    // Trigger the alarm when time's up
     function triggerAlarm() {
       clearInterval(countdownInterval);
       message.textContent = "Time's Up!";
@@ -150,17 +131,15 @@
       });
     }
 
-    // Start Timer button event
     startButton.addEventListener('click', () => {
       startTime = Date.now();
       startButton.disabled = true;
       resetButton.disabled = false;
-      timeInputContainer.style.display = "block";
+      timeInputContainer.style.visibility = "visible"; // Make visible without shifting layout
       message.textContent = "";
       countdownInterval = setInterval(updateDisplay, 250);
     });
 
-    // Set Timer button event
     setButton.addEventListener('click', () => {
       if (!startTime) return;
       const durationSec = parseFloat(timerDurationInput.value);
@@ -178,7 +157,6 @@
       }
     });
 
-    // Reset Timer button event
     resetButton.addEventListener('click', () => {
       clearInterval(countdownInterval);
       clearTimeout(alarmTimeout);
@@ -188,7 +166,7 @@
       alarmTimeout = null;
       display.textContent = 'Elapsed Time: 00:00';
       message.textContent = '';
-      timeInputContainer.style.display = "none";
+      timeInputContainer.style.visibility = "hidden"; // Hide but keep space occupied
       startButton.disabled = false;
       resetButton.disabled = true;
       timerDurationInput.value = 60;
