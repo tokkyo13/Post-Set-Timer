@@ -3,71 +3,116 @@
 <head>
   <meta charset="UTF-8">
   <title>Post-Set-Timer</title>
+  <!-- Include a modern Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Use a full-page gradient background */
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+    /* Container with a semi-transparent glass effect */
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       text-align: center;
-      margin: 50px;
+      max-width: 400px;
+      width: 90%;
     }
     h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
+      font-size: 2.5rem;
     }
-    #controls {
-      margin-bottom: 20px;
+    /* Stylish display area */
+    #display {
+      font-size: 3rem;
+      margin: 1.5rem 0;
+      padding: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    /* Button styles with hover and transition effects */
+    button {
+      background: #fff;
+      border: none;
+      border-radius: 5px;
+      color: #333;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin: 0.5rem;
+    }
+    button:hover {
+      background: #f1f1f1;
+      transform: scale(1.05);
+    }
+    /* Input styling for the duration field */
+    input[type="number"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      width: 80px;
+      margin-right: 0.5rem;
     }
     #timeInputContainer {
-      margin-top: 10px;
-    }
-    #display {
-      font-size: 3em;
-      margin-top: 20px;
+      margin-top: 1rem;
     }
     #message {
-      color: red;
-      font-weight: bold;
-      margin-top: 20px;
-    }
-    button {
-      margin: 5px;
+      font-size: 1.2rem;
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <h1>Post-Set-Timer</h1>
-  <div id="controls">
-    <!-- Start button initiates the timer -->
-    <button id="startButton">Start Timer</button>
-    
-    <!-- Duration input container (hidden until timer starts) -->
-    <div id="timeInputContainer" style="display: none;">
-      <label for="timerDuration">Set Duration (seconds): </label>
-      <input type="number" id="timerDuration" min="1" value="60">
-      <button id="setButton">Set Timer</button>
+  <div class="container">
+    <h1>Post-Set-Timer</h1>
+    <div id="controls">
+      <!-- Start Timer Button -->
+      <button id="startButton">Start Timer</button>
+      
+      <!-- Duration input container (hidden until timer starts) -->
+      <div id="timeInputContainer" style="display: none;">
+        <label for="timerDuration">Duration (sec): </label>
+        <input type="number" id="timerDuration" min="1" value="60">
+        <button id="setButton">Set Timer</button>
+      </div>
+      
+      <!-- Reset Timer Button (disabled by default) -->
+      <button id="resetButton" disabled>Reset Timer</button>
     </div>
     
-    <!-- Reset button to restart the timer; initially disabled -->
-    <button id="resetButton" disabled>Reset Timer</button>
+    <!-- Timer display area -->
+    <div id="display">Elapsed Time: 00:00</div>
+    
+    <!-- Message area -->
+    <div id="message"></div>
+    
+    <!-- Alarm sound file (make sure alarm.mp3 is in your repository) -->
+    <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
   </div>
-  
-  <!-- Display area that shows the timer along with an indicator -->
-  <div id="display">Elapsed Time: 00:00</div>
-  
-  <!-- Optional message area -->
-  <div id="message"></div>
-  
-  <!-- Audio element for the alarm sound.
-       Ensure you have a valid audio file (e.g., alarm.mp3) in your project folder. -->
-  <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
   
   <script>
     // Variables to track timing and interval/timeout references
-    let startTime = null;         // Time when the timer is started
-    let targetTime = null;        // startTime + set duration (in ms)
-    let countdownInterval = null; // Interval for updating the display
-    let alarmTimeout = null;      // Timeout for triggering the alarm
-    
-    // Get references to DOM elements
+    let startTime = null;
+    let targetTime = null;
+    let countdownInterval = null;
+    let alarmTimeout = null;
+
+    // Get DOM elements
     const startButton = document.getElementById('startButton');
     const setButton = document.getElementById('setButton');
     const resetButton = document.getElementById('resetButton');
@@ -76,29 +121,27 @@
     const display = document.getElementById('display');
     const message = document.getElementById('message');
     const alarmSound = document.getElementById('alarmSound');
-    
+
     // Helper function to format seconds as MM:SS
     function formatTime(seconds) {
       const m = Math.floor(seconds / 60).toString().padStart(2, '0');
       const s = Math.floor(seconds % 60).toString().padStart(2, '0');
       return `${m}:${s}`;
     }
-    
-    // Update the display with the appropriate label and time value.
+
+    // Update the timer display
     function updateDisplay() {
       if (!targetTime) {
-        // Show elapsed time if the duration hasn't been set yet.
         const elapsed = (Date.now() - startTime) / 1000;
         display.textContent = "Elapsed Time: " + formatTime(elapsed);
       } else {
-        // Show time remaining after the duration is set.
         let remaining = (targetTime - Date.now()) / 1000;
         if (remaining < 0) remaining = 0;
         display.textContent = "Time Remaining: " + formatTime(remaining);
       }
     }
-    
-    // Alarm handler: stops the timer and plays the alarm sound.
+
+    // Trigger the alarm when time's up
     function triggerAlarm() {
       clearInterval(countdownInterval);
       message.textContent = "Time's Up!";
@@ -106,8 +149,8 @@
         console.error("Error playing sound:", err);
       });
     }
-    
-    // Start button: records the start time, displays the duration input, and begins updating the timer.
+
+    // Start Timer button event
     startButton.addEventListener('click', () => {
       startTime = Date.now();
       startButton.disabled = true;
@@ -116,20 +159,17 @@
       message.textContent = "";
       countdownInterval = setInterval(updateDisplay, 250);
     });
-    
-    // Set button: user enters a duration, and the target time is calculated.
+
+    // Set Timer button event
     setButton.addEventListener('click', () => {
       if (!startTime) return;
-      
       const durationSec = parseFloat(timerDurationInput.value);
       if (isNaN(durationSec) || durationSec <= 0) {
         alert("Please enter a valid positive number for duration.");
         return;
       }
-      
       targetTime = startTime + durationSec * 1000;
       const remainingMs = targetTime - Date.now();
-      
       if (remainingMs <= 0) {
         triggerAlarm();
       } else {
@@ -137,8 +177,8 @@
         alarmTimeout = setTimeout(triggerAlarm, remainingMs);
       }
     });
-    
-    // Reset button: clears all timers, resets the display, and reverts UI to its initial state.
+
+    // Reset Timer button event
     resetButton.addEventListener('click', () => {
       clearInterval(countdownInterval);
       clearTimeout(alarmTimeout);
