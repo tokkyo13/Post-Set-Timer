@@ -56,8 +56,3 @@ A simple web-based timer application that starts immediately, allows setting a d
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- This project was inspired by the need for a simple yet flexible timer application.
-- Thanks to all the open-source communities and projects that made this possible.
