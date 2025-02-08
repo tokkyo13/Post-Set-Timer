@@ -23,10 +23,10 @@ A simple web-based timer application that starts immediately, allows setting a d
    cd Post-Set-Timer
    ```
 
-2. **Add the Alarm Sound:**
+2. **Using the Alarm Sound:**
 
-   Ensure that you have an audio file (e.g., `alarm.mp3`) in the project directory.  
-   If you prefer to use another file or path, update the `<audio>` element's `src` attribute in `index.html` accordingly.
+   - An `alarm.mp3` file is provided in the repository.
+   - If you wish to modify the alarm sound, replace `alarm.mp3` with a different file of your choice.
 
 3. **Run the Application:**
 
@@ -51,7 +51,7 @@ A simple web-based timer application that starts immediately, allows setting a d
 
 - `index.html`: Main HTML file that contains the application structure and JavaScript.
 - `README.md`: This documentation file.
-- `alarm.mp3`: The audio file used for the alarm (ensure it is provided or update the path as needed).
+- `alarm.mp3`: The default alarm sound file (users can replace or modify it).
 
 ## License
 
