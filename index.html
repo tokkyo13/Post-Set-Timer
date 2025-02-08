@@ -15,6 +15,7 @@
       align-items: center;
       height: 100vh;
       color: #fff;
+      transition: background 0.5s ease-in-out;
     }
     .container {
       background: rgba(255, 255, 255, 0.1);
@@ -26,7 +27,7 @@
       text-align: center;
       max-width: 400px;
       width: 90%;
-      min-height: 350px; /* Prevents height shifting */
+      min-height: 350px;
     }
     h1 {
       margin-bottom: 1.5rem;
@@ -63,14 +64,17 @@
       width: 80px;
       margin-right: 0.5rem;
     }
-    /* Ensure the time input container is always present but invisible initially */
     #timeInputContainer {
       margin-top: 1rem;
-      visibility: hidden; /* Keep space occupied, but hide content */
+      visibility: hidden;
     }
-    #message {
-      font-size: 1.2rem;
-      margin-top: 1rem;
+    /* Time's Up! Styling */
+    .time-up-bg {
+      background: #d32f2f !important; /* Red background */
+    }
+    .time-up-message {
+      color: #ffeb3b !important; /* Yellow text */
+      font-size: 2rem;
     }
   </style>
 </head>
@@ -82,7 +86,7 @@
       <div id="timeInputContainer">
         <label for="timerDuration">Duration (sec): </label>
         <input type="number" id="timerDuration" min="1" value="60">
-        <button id="setButton">Set Timer</button>
+        <button id="setButton">Set Time Limit,</button>
       </div>
       <button id="resetButton" disabled>Reset Timer</button>
     </div>
@@ -105,6 +109,7 @@
     const display = document.getElementById('display');
     const message = document.getElementById('message');
     const alarmSound = document.getElementById('alarmSound');
+    const body = document.body;
 
     function formatTime(seconds) {
       const m = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -126,16 +131,24 @@
     function triggerAlarm() {
       clearInterval(countdownInterval);
       message.textContent = "Time's Up!";
+      message.classList.add("time-up-message");
+      body.classList.add("time-up-bg");
+
       alarmSound.play().catch(err => {
         console.error("Error playing sound:", err);
       });
+
+      // Vibrate for 500ms on mobile
+      if ("vibrate" in navigator) {
+        navigator.vibrate(500);
+      }
     }
 
     startButton.addEventListener('click', () => {
       startTime = Date.now();
       startButton.disabled = true;
       resetButton.disabled = false;
-      timeInputContainer.style.visibility = "visible"; // Make visible without shifting layout
+      timeInputContainer.style.visibility = "visible";
       message.textContent = "";
       countdownInterval = setInterval(updateDisplay, 250);
     });
@@ -162,11 +175,11 @@
       clearTimeout(alarmTimeout);
       startTime = null;
       targetTime = null;
-      countdownInterval = null;
-      alarmTimeout = null;
       display.textContent = 'Elapsed Time: 00:00';
       message.textContent = '';
-      timeInputContainer.style.visibility = "hidden"; // Hide but keep space occupied
+      message.classList.remove("time-up-message");
+      body.classList.remove("time-up-bg");
+      timeInputContainer.style.visibility = "hidden";
       startButton.disabled = false;
       resetButton.disabled = true;
       timerDurationInput.value = 60;
