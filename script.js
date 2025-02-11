@@ -36,9 +36,21 @@ function triggerAlarm() {
     message.classList.add("time-up-message");
     body.classList.add("time-up-bg");
 
-    alarmSound.play().catch(err => {
-        console.error("Error playing sound:", err);
-    });
+    // oscillator
+    const osc = new Tone.Oscillator(2000, "sine").toDestination();
+
+    // alarm
+    const duration = 0.060;
+    let time = Tone.now();
+    for (let i = 0; i < 3; i++) {
+        for(let j = 0; j < 4; j++){
+            osc.start(time);
+            time += duration;
+            osc.stop(time);
+            time += duration;
+        }
+        time += duration * 8;
+    }
 
     // Vibrate for 500ms on mobile
     if ("vibrate" in navigator) {
@@ -46,13 +58,17 @@ function triggerAlarm() {
     }
 }
 
-startButton.addEventListener('click', () => {
+startButton.addEventListener('click', async () => {
     startTime = Date.now();
     startButton.disabled = true;
     resetButton.disabled = false;
     timeInputContainer.style.visibility = "visible";
     message.textContent = ""; // Clear message but keep space occupied
     countdownInterval = setInterval(updateDisplay, 250);
+
+    // Start audio by user gesture
+    await Tone.start();
+    console.log("audio is ready");
 });
 
 setButton.addEventListener('click', () => {
