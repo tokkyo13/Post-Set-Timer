@@ -10,6 +10,7 @@
         height: 100vh;
         color: #E3E3E3;
         transition: background 0.5s ease-in-out;
+        overscroll-behavior: none;
     }
 
     /* Stylish container */
