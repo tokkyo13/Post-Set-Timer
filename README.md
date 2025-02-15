@@ -28,10 +28,10 @@ You can access the live version of this application here:
    cd Post-Set-Timer
    ```
 
-2. **Using the Alarm Sound:**
+2. **Alarm Sound Implementation:**
 
-   - An `alarm.mp3` file is provided in the repository.
-   - If you wish to modify the alarm sound, replace `alarm.mp3` with a different file of your choice.
+   - This application uses Tone.js to generate an alarm sound via an oscillator.
+   - To modify the alarm sound, update the oscillator configuration in `script.js`.
 
 3. **Run the Application:**
 
@@ -43,7 +43,7 @@ You can access the live version of this application here:
    Click the **Start Timer** button to begin time measurement immediately.
 
 2. **Set the Duration:**  
-   Enter the desired duration (in seconds) in the provided input field and click **Set Timer**.  
+   Enter the desired duration (in seconds) in the provided input field and click **Set Duration**.  
    The display will update to show either the elapsed time (if no duration is set) or the remaining time until the alarm.
 
 3. **Alarm Notification:**  
@@ -54,9 +54,10 @@ You can access the live version of this application here:
 
 ## Project Structure
 
-- `index.html`: Main HTML file that contains the application structure and JavaScript.
+- `index.html`: Main HTML file that contains the application structure and links to the JavaScript and CSS files.
+- `script.js`: Contains the timer functionality and alarm sound generation using Tone.js.
+- `style.css`: Provides the styling for the application.
 - `README.md`: This documentation file.
-- `alarm.mp3`: The default alarm sound file (users can replace or modify it).
 
 ## License
 
